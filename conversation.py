@@ -27,7 +27,7 @@ def read_input(prompt):
         prompt = prompt + ': '
 
 
-    print(translation.ENtoKR(prompt), end='', flush=True)
+    print(translation.ENtoKR(prompt), end='', flush=True)   #챗봇의 질문들을 한국어로 번역
     return sys.stdin.readline().strip()
 
 
@@ -75,7 +75,9 @@ def read_complaint_portion(age, sex, auth_string, case_id, context, language_mod
         dict: Response from /parse endpoint.
 
     """
-    text = read_input('Describe you complaints')
+    text = read_input('Describe you complaints')    # 사용자의 불만 사항을 받는 곳
+    text = translation.KRtoEN(text)                 # 입력받는 한국어를 영어로 번역
+
     if not text:
         return None
     resp = apiaccess.call_parse(age, sex, text, auth_string, case_id, context,
