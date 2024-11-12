@@ -1,0 +1,59 @@
+환자 연령과 성별 (예 : 30 명의 남성) :25 male
+Ok, 25 year old male.
+불만을 설명하십시오.I still have a high fever of 39 degrees and a runny nose and cough.
+Noting: +Fever, between 37°C and 37.9°C or between 98.6°F and 100.3°F, +Nasal catarrh, +Cough
+불만을 설명하십시오.My muscle pain makes it difficult to move my body and I feel dizzy.
+Noting: +Joint pain, mechanical, +Dizziness
+불만을 설명하십시오.
+콧물이 3 개월 이상 지속 되었습니까?no
+콧물이 3 개월 미만 이었습니까?yes
+가래 나 점액이없는 마른 기침이 있습니까?yes
+기침이 3 주 미만으로 지속 되었습니까?yes
+6 개월 전에 Covid-19 백신의 마지막 복용량을 받았습니까?no
+전에 이렇게 현기증이나 가벼운 느낌이 들었습니까?yes
+열이 3 일 이내에 지속 되었습니까?yes
+관절 통증이 갑자기 시작 되었습니까?yes
+최근에 신체적 외상이나 부상을 입었습니까?no
+눈이 아파요?no
+목이 붉어?yes
+목이 아파요?yes
+입안의 조직에 상처 나 변화가 있습니까?no
+삼키면 아파요?yes
+목구멍이 부어?yes
+
+Patient complaints:
+
+Patient answers:
+ 1. +Fever, between 37°C and 37.9°C or between 98.6°F and 100.3°F
+ 2. +Nasal catarrh
+ 3. +Cough
+ 4. +Joint pain, mechanical
+ 5. +Dizziness
+ 6. -Nasal catarrh, chronic
+ 7. +Nasal catarrh, acute
+ 8. +Cough, dry
+ 9. +Cough, lasting less than 3 weeks
+10. -COVID-19 vaccination, more than 6 months ago
+11. +Dizziness, recurrent
+12. +Fever, lasting less than 3 days
+13. +Joint pain, sudden
+14. -Recent physical injury
+15. -Eye pain
+16. +Pharyngeal erythema
+17. +Pharyngeal pain
+18. -Oral lesions
+19. +Odynophagia
+20. +Pharyngeal swelling
+
+Diagnoses:
+ 1. 0.53 Acute viral pharyngitis
+ 2. 0.27 Common cold
+ 3. 0.24 Acute laryngitis
+ 4. 0.21 COVID-19
+ 5. 0.14 Infectious mononucleosis
+ 6. 0.13 Reflex syncope
+ 7. 0.10 Hypotension
+ 8. 0.07 Adenoviral respiratory disease
+
+Triage level: self_care
+Teleconsultation applicable: True
