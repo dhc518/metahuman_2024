@@ -4,7 +4,7 @@ import sys
 import apiaccess
 import constants
 
-import translation
+from translation import KRtoEN, ENtoKR
 
 
 class AmbiguousAnswerException(Exception):
@@ -76,7 +76,8 @@ def read_complaint_portion(age, sex, auth_string, case_id, context, language_mod
 
     """
     text = read_input('Describe you complaints')    # 사용자의 불만 사항을 받는 곳
-    text = translation.KRtoEN(text)                 # 입력받는 한국어를 영어로 번역
+    if(text != ""):
+        text = translation.KRtoEN(text)                 # 입력받는 한국어를 영어로 번역
 
     if not text:
         return None
@@ -150,6 +151,7 @@ def read_single_question_answer(question_text):
     input and convert it to one of the expected evidence statuses: present,
     absent or unknown. Return None if no answer provided."""
     answer = read_input(question_text)
+    answer = KRtoEN(answer)
     if not answer:
         return None
 
@@ -212,7 +214,7 @@ def conduct_interview(evidence, age, sex, case_id, auth, language_model=None):
 def summarise_some_evidence(evidence, header):
     print(header + ':')
     for idx, piece in enumerate(evidence):
-        print('{:2}. {}'.format(idx + 1, mention_as_text(piece)))
+        print('{:2}. {}'.format(idx + 1, ENtoKR(mention_as_text(piece))))
     print()
 
 
@@ -221,15 +223,15 @@ def summarise_all_evidence(evidence):
     answered = []
     for piece in evidence:
         (reported if piece.get('initial') else answered).append(piece)
-    summarise_some_evidence(reported, 'Patient complaints')
-    summarise_some_evidence(answered, 'Patient answers')
+    summarise_some_evidence(reported, '불만 내용')
+    summarise_some_evidence(answered, '증상 내용')
 
 
 def summarise_diagnoses(diagnoses):
-    print('Diagnoses:')
+    print('진단 결과:')
     for idx, diag in enumerate(diagnoses):
         print('{:2}. {:.2f} {}'.format(idx + 1, diag['probability'],
-                                       diag['name']))
+                                       ENtoKR(diag['name'])))
     print()
 
 
