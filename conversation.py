@@ -9,6 +9,9 @@ from translation import KRtoEN, ENtoKR
 import os
 import time
 
+Debugmode = False
+
+
 class AmbiguousAnswerException(Exception):
     pass
 
@@ -77,8 +80,11 @@ def read_age_sex():
 
     """
     export_to_client("Patient age and sex (e.g., 30 male)")             # 봇 to 클라이언트
-    answer = import_from_client()                                       # 클라이언트 to 봇
-    #answer = read_input("Patient age and sex (e.g., 30 male)")         # 기존 시스템 직접 입력
+    if Debugmode == True:
+        answer = read_input("Patient age and sex (e.g., 30 male)")  # 기존 시스템 직접 입력
+    else:
+        answer = import_from_client()                                       # 클라이언트 to 봇
+
     try:
         age = int(extract_age(answer))
         sex = extract_sex(answer, constants.SEX_NORM)
@@ -112,8 +118,11 @@ def read_complaint_portion(age, sex, auth_string, case_id, context, language_mod
 
     """
     export_to_client('Describe you complaints')
-    text = import_from_client()  # 사용자의 불만 사항을 받는 곳
-    #text = read_input('Describe you complaints')    # 기존 시스템 입력
+    if Debugmode == True:
+        text = read_input('Describe you complaints')  # 기존 시스템 입력
+    else:
+        text = import_from_client()  # 사용자의 불만 사항을 받는 곳
+
     if(text != ""):
         text = KRtoEN(text)                 # 입력받는 한국어를 영어로 번역
 
@@ -188,7 +197,13 @@ def read_single_question_answer(question_text):
     single-choice question. Prompt the user with question text, read user's
     input and convert it to one of the expected evidence statuses: present,
     absent or unknown. Return None if no answer provided."""
-    answer = import_from_client()
+
+    export_to_client(question_text)     # 봇 to 클라이언트
+    if Debugmode == True:
+        answer = read_input(question_text)
+    else:
+        answer = import_from_client()       # 클라이언트 to 봇
+
     answer = KRtoEN(answer)
     if not answer:
         return None
@@ -268,11 +283,12 @@ def summarise_all_evidence(evidence):
 
 def summarise_diagnoses(diagnoses):
     print('진단 결과:')
-    result = None
+    result = ""
     for idx, diag in enumerate(diagnoses):
         print('{:2}. {:.2f} {}'.format(idx + 1, diag['probability'],
                                        ENtoKR(diag['name'])))
-        result += '{:2}. {:.2f} {}'.format(idx + 1, diag['probability'], ENtoKR(diag['name']))
+        result +=f"{idx + 1}. {diag['probability']}  {ENtoKR(diag['name'])} \n"
+    export_to_client(result)
     print()
 
 
