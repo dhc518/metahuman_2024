@@ -5,8 +5,8 @@ import conversation
 import apiaccess
 
 
-APP_ID = ""
-APP_KEY = ""
+APP_ID = "ecf0a763"
+APP_KEY = "2d6b19fccbc3284c3861deb19094d8d6"
 
 
 

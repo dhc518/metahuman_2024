@@ -6,9 +6,40 @@ import constants
 
 from translation import KRtoEN, ENtoKR
 
+import os
+import time
 
 class AmbiguousAnswerException(Exception):
     pass
+
+
+def export_to_client(text):
+    file_path = 'talk/bot.txt'
+    try:
+        with open(file_path, 'w', encoding='utf-8') as file:  # 쓰기 모드로 파일 열기
+            file.write(text)
+        print(f"'{file_path}' 파일이 성공적으로 생성되었습니다.")
+    except Exception as e:
+        print(f"파일 생성 중 오류가 발생했습니다: {e}")
+
+
+def import_from_client():
+    file_path = 'talk/client.txt'
+    while(True):
+        if os.path.exists(file_path):
+            print(f"'{file_path}' 파일이 존재합니다.")
+            # 파일 내용 읽기
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:  # 파일 열기
+                    content = file.read()  # 파일 내용 읽기
+                    print("파일 내용:")
+                    print(content)  # 출력
+            except Exception as e:
+                print(f"파일을 읽는 중 오류가 발생했습니다: {e}")
+            os.remove(file_path)
+            return content
+        time.sleep(0.5)
+
 
 
 def read_input(prompt):
@@ -27,7 +58,7 @@ def read_input(prompt):
         prompt = prompt + ': '
 
 
-    print(translation.ENtoKR(prompt), end='', flush=True)   #챗봇의 질문들을 한국어로 번역
+    print(ENtoKR(prompt), end='', flush=True)   #챗봇의 질문들을 한국어로 번역
     return sys.stdin.readline().strip()
 
 
@@ -45,16 +76,21 @@ def read_age_sex():
         int, str: Age and sex.
 
     """
-    answer = read_input("Patient age and sex (e.g., 30 male)")
+    export_to_client("Patient age and sex (e.g., 30 male)")             # 봇 to 클라이언트
+    answer = import_from_client()                                       # 클라이언트 to 봇
+    #answer = read_input("Patient age and sex (e.g., 30 male)")         # 기존 시스템 직접 입력
     try:
         age = int(extract_age(answer))
         sex = extract_sex(answer, constants.SEX_NORM)
         if age < constants.MIN_AGE:
+            export_to_client("Ages below 12 are not yet supported.")    # 봇 to 클라이언트
             raise ValueError("Ages below 12 are not yet supported.")
         if age > constants.MAX_AGE:
+            export_to_client("Maximum possible age is 130.")            # 봇 to 클라이언트
             raise ValueError("Maximum possible age is 130.")
     except (AmbiguousAnswerException, ValueError) as e:
         print("{} Please repeat.".format(e))
+        export_to_client("{} Please repeat.".format(e))                 # 봇 to 클라이언트
         return read_age_sex()
     return age, sex
 
@@ -75,9 +111,11 @@ def read_complaint_portion(age, sex, auth_string, case_id, context, language_mod
         dict: Response from /parse endpoint.
 
     """
-    text = read_input('Describe you complaints')    # 사용자의 불만 사항을 받는 곳
+    export_to_client('Describe you complaints')
+    text = import_from_client()  # 사용자의 불만 사항을 받는 곳
+    #text = read_input('Describe you complaints')    # 기존 시스템 입력
     if(text != ""):
-        text = translation.KRtoEN(text)                 # 입력받는 한국어를 영어로 번역
+        text = KRtoEN(text)                 # 입력받는 한국어를 영어로 번역
 
     if not text:
         return None
@@ -150,7 +188,7 @@ def read_single_question_answer(question_text):
     single-choice question. Prompt the user with question text, read user's
     input and convert it to one of the expected evidence statuses: present,
     absent or unknown. Return None if no answer provided."""
-    answer = read_input(question_text)
+    answer = import_from_client()
     answer = KRtoEN(answer)
     if not answer:
         return None
@@ -159,6 +197,7 @@ def read_single_question_answer(question_text):
         return extract_decision(answer, constants.ANSWER_NORM)
     except (AmbiguousAnswerException, ValueError) as e:
         print("{} Please repeat.".format(e))
+        export_to_client("{} Please repeat.".format(e))
         return read_single_question_answer(question_text)
 
 
@@ -229,9 +268,11 @@ def summarise_all_evidence(evidence):
 
 def summarise_diagnoses(diagnoses):
     print('진단 결과:')
+    result = None
     for idx, diag in enumerate(diagnoses):
         print('{:2}. {:.2f} {}'.format(idx + 1, diag['probability'],
                                        ENtoKR(diag['name'])))
+        result += '{:2}. {:.2f} {}'.format(idx + 1, diag['probability'], ENtoKR(diag['name']))
     print()
 
 
