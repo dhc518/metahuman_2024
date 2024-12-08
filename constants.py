@@ -22,6 +22,10 @@ SEX_NORM = {
     "señora": "female",
     "senora": "female",
     "senhora": "female",
+    "남자":"male",
+    "남성":"male",
+    "여자":"female",
+    "여성":"female"
 }
 
 ANSWER_NORM = {

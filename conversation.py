@@ -17,7 +17,10 @@ class AmbiguousAnswerException(Exception):
 
 
 def export_to_client(text):
-    file_path = 'talk/bot.txt'
+    text = ENtoKR(text)
+    current_dir = 'E:/Epic Games/Unreal Projects/chatting_AI'
+    file_path = current_dir + '/bot.txt'
+
     try:
         with open(file_path, 'w', encoding='utf-8') as file:  # 쓰기 모드로 파일 열기
             file.write(text)
@@ -27,20 +30,22 @@ def export_to_client(text):
 
 
 def import_from_client():
-    file_path = 'talk/client.txt'
+    current_dir = 'E:/Epic Games/Unreal Projects/chatting_AI'
+    file_path = current_dir + '/client.txt'
     while(True):
         if os.path.exists(file_path):
-            print(f"'{file_path}' 파일이 존재합니다.")
+            #print(f"'{file_path}' 파일이 존재합니다.")
             # 파일 내용 읽기
             try:
-                with open(file_path, 'r', encoding='utf-8') as file:  # 파일 열기
+                with open(file_path, "r", encoding='utf-16-le') as file:# 파일 열기
                     content = file.read()  # 파일 내용 읽기
-                    print("파일 내용:")
-                    print(content)  # 출력
             except Exception as e:
                 print(f"파일을 읽는 중 오류가 발생했습니다: {e}")
+            print("파일 내용:")
+            #print(content)  # 출력
             os.remove(file_path)
             return content
+        #else: print(print(f"'{file_path}' 파일이 존재하지 않습니다."))
         time.sleep(0.5)
 
 
@@ -117,9 +122,9 @@ def read_complaint_portion(age, sex, auth_string, case_id, context, language_mod
         dict: Response from /parse endpoint.
 
     """
-    export_to_client('Describe you complaints')
+    export_to_client('Describe your complaints')
     if Debugmode == True:
-        text = read_input('Describe you complaints')  # 기존 시스템 입력
+        text = read_input('Describe your complaints')  # 기존 시스템 입력
     else:
         text = import_from_client()  # 사용자의 불만 사항을 받는 곳
 
